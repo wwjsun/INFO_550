@@ -1,0 +1,51 @@
+---
+title: "Homework 2"
+author: "Jane Wei"
+date: "`r format(Sys.Date(), '%Y-%m-%d')`"
+output: html_document
+---
+
+#Abstract 
+The study compared patients undergoing aortic surgery following one vs. multiple cardiac intervention. 
+
+#Patients and methods
+The data contains 360 subjects who had their first re-do aortic surgery and 69 subjects who had multiple re-do aortic surgeries. The four hundred and twenty-nine patients all came from the same US academic healthcare system. 
+```{r, load-data}
+# load Num_of_Redo data
+setwd("./INFO_550")
+library(dplyr)
+library(survival)
+
+Num_of_Redo <- read.csv(file='Num_of_Redo.csv', header=TRUE)
+```
+
+##Data Clean
+First, the data has been imported to R and cleaned.
+```{r, Data-Clean, echo = FALSE}
+#Data clean code here
+head(Num_of_Redo)
+#Num_of_Redo< -Num_of_Redo%>%mutate(OR_length=(Skin_Incision_Stop_Date_And_Time-Skin_Incision_Start_Date_And_Time)/3600)
+
+```
+
+#Results
+The Kaplan Meier survival curve for both group looks like this: 
+```{r, KM, echo = FALSE}
+#Survial code here
+f1 <- survfit(Surv(Survival__years_, Alive_at_last_follow_up) ~ 1, data = Num_of_Redo)
+
+plot(survfit(Surv(Survival__years_, Alive_at_last_follow_up) ~ 1, data = Num_of_Redo), 
+     xlab = "Survival Years", 
+     ylab = "survival probability")
+```
+#Discussion
+As we see in Figure \@ref(fig:KM), the multiple redo group has a sharp drop within 30 days compare to the first redo group.
+
+#Notes on the report 
+Finally, A few reproducible related information were kept below. 
+```{r, Appendix, echo = FALSE}
+getwd()
+devtools::session_info()
+```
+
+Rscript -e "rmarkdown::render('Homework2.Rmd')"
